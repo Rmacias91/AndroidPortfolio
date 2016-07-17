@@ -22,7 +22,6 @@ import java.util.Locale;
 public class CrimeListFragment extends Fragment{
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-    private int selectedItem;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -48,9 +47,10 @@ public class CrimeListFragment extends Fragment{
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else{
-            mAdapter.notifyItemChanged(selectedItem);
+            mAdapter.notifyDataSetChanged(); // Had to remove the itemSetChanged() due to
+                                            //PageViewer being able to update multiple items..
+                                            //revisit this and maybe use notifyItemRangerChanged!
         }
-
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -80,8 +80,7 @@ public class CrimeListFragment extends Fragment{
         }
         @Override
         public void onClick(View v){
-            selectedItem = getLayoutPosition();
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
     }
