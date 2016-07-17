@@ -22,6 +22,7 @@ import java.util.Locale;
 public class CrimeListFragment extends Fragment{
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private int selectedItem;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -33,12 +34,23 @@ public class CrimeListFragment extends Fragment{
         updateUI();
         return view;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateUI();
+    }
     private void updateUI(){
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes =crimeLab.getCrimes();
+            CrimeLab crimeLab = CrimeLab.get(getActivity());
+            List<Crime> crimes = crimeLab.getCrimes();
 
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if(mAdapter==null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }
+        else{
+            mAdapter.notifyItemChanged(selectedItem);
+        }
+
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
@@ -68,6 +80,7 @@ public class CrimeListFragment extends Fragment{
         }
         @Override
         public void onClick(View v){
+            selectedItem = getLayoutPosition();
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
@@ -77,6 +90,7 @@ public class CrimeListFragment extends Fragment{
         public CrimeAdapter(List<Crime> crimes){
             mCrimes = crimes;
         }
+
 
         @Override
         public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {

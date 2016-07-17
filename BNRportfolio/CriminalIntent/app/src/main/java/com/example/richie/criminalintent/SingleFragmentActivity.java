@@ -18,7 +18,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity{
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if(fragment == null){
-            fragment = createFragment();
+            fragment = createFragment();//Calls abstract constructor here.
             fm.beginTransaction()
                     .add(R.id.fragment_container,fragment)
                     .commit();
