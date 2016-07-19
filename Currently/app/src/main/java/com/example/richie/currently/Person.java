@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class Person {
     private String name;
+    private String position;
+    private String availability;
     private List<Task> tasks;
     private List<Task> completedTasks;
 
@@ -32,8 +34,15 @@ public class Person {
         Task selectedTask = tasks.get(pos);
         selectedTask.editTask(task,duration,manager);
     }
+    public String getName(){
+        return name;
+    }
 
+    public String getPosition(){
+        return position;
+    }
 
+    public String getAvailability(){return availability;}
 
 
 
