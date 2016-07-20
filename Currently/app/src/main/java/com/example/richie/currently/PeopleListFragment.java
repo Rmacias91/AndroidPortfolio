@@ -33,7 +33,16 @@ public class PeopleListFragment extends Fragment {
     }
 
     private void updateUI(){
-        // 
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Person> persons = personLab.getPersons();
+
+        if(mAdapter==null) {
+            mAdapter = new PersonAdapter(persons);
+            mPersonRecyclerView.setAdapter(mAdapter);
+        }
+        else{
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder
