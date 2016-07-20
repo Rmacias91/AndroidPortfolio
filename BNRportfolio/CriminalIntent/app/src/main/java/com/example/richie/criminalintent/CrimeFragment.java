@@ -26,13 +26,16 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID= "crime_id";
     private static final String DIALOG_DATE="DialogDate";
+    private static final String DIALOG_TIME="DialogTime";
 
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckbox;
+    private Button mTimeButton;
 
 
     public static CrimeFragment newInstance(UUID crimeId){
@@ -76,7 +79,7 @@ public class CrimeFragment extends Fragment {
         });
         mDateButton = (Button) v.findViewById(R.id.crime_date);
 
-        updateDate();
+
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +91,17 @@ public class CrimeFragment extends Fragment {
 
             }
         });
-
+        mTimeButton = (Button) v.findViewById(R.id.crime_time);
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = new TimePickerFragment();
+                dialog.setTargetFragment(CrimeFragment.this,REQUEST_TIME);
+                dialog.show(manager,DIALOG_TIME);
+            }
+        });
+        updateDate();//Update Date and Time Buttons
         mSolvedCheckbox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -112,12 +125,21 @@ public class CrimeFragment extends Fragment {
             mCrime.setDate(date);
             updateDate();
         }
+        if(requestCode ==REQUEST_TIME){
+            int hour = data
+                    .getIntExtra(TimePickerFragment.EXTRA_HOUR,0);
+            int minutes = data.
+                    getIntExtra(TimePickerFragment.EXTRA_MINUTES,0);
+
+        }
 
     }
 
     private void updateDate() {
-        String dateOfCrime = new SimpleDateFormat("EEE hh:mma MM/dd/yyyy",Locale.US).format(mCrime.getDate());
+        String dateOfCrime = new SimpleDateFormat("EEE MM/dd/yyyy",Locale.US).format(mCrime.getDate());
         mDateButton.setText(dateOfCrime);
+        String timeOfCrime = new SimpleDateFormat("hh:mm a",Locale.US).format(mCrime.getDate());
+        mTimeButton.setText(timeOfCrime);
     }
 
 }
