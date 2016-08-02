@@ -33,7 +33,7 @@ public class PeopleListFragment extends Fragment {
     }
 
     private void updateUI(){
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        PersonLab personLab = PersonLab.get(getActivity());
         List<Person> persons = personLab.getPersons();
 
         if(mAdapter==null) {

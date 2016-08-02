@@ -3,11 +3,14 @@ package com.example.richie.currently;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Richie on 7/14/16.
  */
 public class Person {
+
+    private UUID mId;
     private String name;
     private String position;
     private String availability;
@@ -15,8 +18,8 @@ public class Person {
     private List<Task> completedTasks;
 
 
-    public Person(String name){
-        this.name = name;
+    public Person(){
+        mId = UUID.randomUUID();
         tasks = new ArrayList<>();
         completedTasks = new ArrayList<>();
     }
@@ -34,6 +37,18 @@ public class Person {
         Task selectedTask = tasks.get(pos);
         selectedTask.editTask(task,duration,manager);
     }
+    public void setAvailability(String availability) {
+        this.availability = availability;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public String getName(){
         return name;
     }
@@ -43,6 +58,8 @@ public class Person {
     }
 
     public String getAvailability(){return availability;}
+
+    public UUID getId() {return mId;}
 
 
 

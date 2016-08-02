@@ -10,12 +10,12 @@ import java.util.UUID;
  * Created by richardmacias on 7/20/16.
  */
 public class PersonLab {
-    private static Personlab sPersonlab;//Creates a Singleton object of CrimeLab class.
+    private static PersonLab sPersonLab;//Creates a Singleton object of CrimeLab class.
     private List<Person> mPersons;
 
     public static PersonLab get(Context context) {
-        if (sPersonlab == null) {
-            sPersonlab = new PersonLab(context);
+        if (sPersonLab == null) {
+            sPersonLab = new PersonLab(context);
         }
         return sPersonLab;
 
@@ -25,20 +25,21 @@ public class PersonLab {
         mPersons = new ArrayList<>();
         for(int i =0; i<100; i++){//100 fake crimes
             Person person = new Person();
-            crime.setTitle("Crime #"+ i);
-            crime.setSolved(i%2 ==0);
-            mCrimes.add(crime);
+            person.setName("Employee#"+i);
+            person.setAvailability("Free");
+            person.createTask("Finish schematics",3, "Salah Munasser");
+            mPersons.add(person);
         }
     }
 
-    public List<Crime> getCrimes(){
-        return mCrimes;
+    public List<Person> getPersons(){
+        return mPersons;
     }
 
-    public Crime getCrime(UUID id){
-        for(Crime crime:mCrimes){
-            if(crime.getId().equals(id)){
-                return crime;
+    public Person getPerson(UUID id){
+        for(Person person:mPersons){
+            if(person.getId().equals(id)){
+                return person;
             }
         }
         return null;
