@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -21,13 +22,13 @@ import java.util.GregorianCalendar;
 public class TimePickerFragment extends DialogFragment {
 
     private TimePicker mTimePicker;
-    private static final String ARG_DATE = "date";
+    private static final String ARG_TIME = "date";
     public static final String EXTRA_HOUR = "com.example.richie.criminalintent.hour";
     public static final String EXTRA_MINUTES = "com.example.richie.criminalintent.minutes";
 
     public static TimePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_DATE,date);
+        args.putSerializable(ARG_TIME,date);
         TimePickerFragment fragment = new TimePickerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -38,10 +39,12 @@ public class TimePickerFragment extends DialogFragment {
         View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_time,null);
 
-        Date date =(Date)getArguments().getSerializable(ARG_DATE);
+        Date date =(Date)getArguments().getSerializable(ARG_TIME);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         mTimePicker = (TimePicker) v.findViewById(R.id.dialog_time_picker);
-        mTimePicker.setCurrentHour(date.getHours());
-        mTimePicker.setCurrentMinute(date.getMinutes());
+        mTimePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
+        mTimePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setTitle(R.string.time_picker_title)
@@ -51,6 +54,7 @@ public class TimePickerFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which){
                                 int hour = mTimePicker.getCurrentHour();
                                 int minutes = mTimePicker.getCurrentMinute();
+
                                 sendResult(Activity.RESULT_OK,hour,minutes);
                             }
                         })

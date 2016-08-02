@@ -96,7 +96,8 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                TimePickerFragment dialog = new TimePickerFragment();
+                TimePickerFragment dialog = TimePickerFragment
+                        .newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this,REQUEST_TIME);
                 dialog.show(manager,DIALOG_TIME);
             }
@@ -130,7 +131,10 @@ public class CrimeFragment extends Fragment {
                     .getIntExtra(TimePickerFragment.EXTRA_HOUR,0);
             int minutes = data.
                     getIntExtra(TimePickerFragment.EXTRA_MINUTES,0);
-
+            Date date = mCrime.getDate();
+            date.setHours(hour);
+            date.setMinutes(minutes);
+            updateDate();
         }
 
     }
