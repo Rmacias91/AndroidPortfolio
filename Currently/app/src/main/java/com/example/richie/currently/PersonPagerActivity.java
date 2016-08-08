@@ -41,7 +41,8 @@ public class PersonPagerActivity extends FragmentActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                return null;
+                Person person = mPersons.get(position);
+                return PersonFragment.newInstance(person.getId());
             }
 
             @Override
