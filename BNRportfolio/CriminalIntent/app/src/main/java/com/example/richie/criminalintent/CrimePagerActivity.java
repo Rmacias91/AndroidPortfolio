@@ -9,6 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +35,7 @@ public class CrimePagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime_pager);
-        UUID crimeId = (UUID) getIntent()
-                .getSerializableExtra(EXTRA_CRIME_ID);
+        UUID crimeId = getCrimeId();
 
         mViewPager = (ViewPager)findViewById(R.id.activity_crime_view_pager);
         mCrimes = CrimeLab.get(this).getCrimes();
@@ -55,5 +58,41 @@ public class CrimePagerActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.fragment_crime, menu);
+        return true;
+    }
+
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.menu_item_delete_crime:
+                deleteCrime();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private void deleteCrime(){
+        UUID crimeId = getCrimeId();
+        for(int i =0; i<=mCrimes.size();i++){
+            if(mCrimes.get(i).getId().equals(crimeId)){
+                mCrimes.remove(i);
+                break;
+            }
+        }
+    }
+
+    private UUID getCrimeId(){
+        return(UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
     }
 }

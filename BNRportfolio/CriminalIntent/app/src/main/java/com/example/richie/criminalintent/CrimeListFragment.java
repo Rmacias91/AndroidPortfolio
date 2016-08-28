@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ public class CrimeListFragment extends Fragment{
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
+    private TextView mTextView;
+    private Button mAddButton;
     private static final String SAVED_SUBTTTLE_VISIBLE= "subtitle";
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -40,6 +43,14 @@ public class CrimeListFragment extends Fragment{
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_crime_list,container,false);
 
+        mTextView = (TextView) view.findViewById(R.id.noCrimes_title);
+        mAddButton= (Button) view.findViewById(R.id.new_crime);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCrime();
+            }
+        });
         mCrimeRecyclerView =(RecyclerView) view.
                 findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -62,6 +73,14 @@ public class CrimeListFragment extends Fragment{
     private void updateUI(){
             CrimeLab crimeLab = CrimeLab.get(getActivity());
             List<Crime> crimes = crimeLab.getCrimes();
+            if(crimes.size()==0){
+                mTextView.setVisibility(View.VISIBLE );
+                mAddButton.setVisibility(View.VISIBLE);
+            }
+            else{
+                mTextView.setVisibility(View.GONE );
+                mAddButton.setVisibility(View.GONE);
+            }
 
         if(mAdapter==null) {
             mAdapter = new CrimeAdapter(crimes);
@@ -92,11 +111,7 @@ public class CrimeListFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_crime:
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = new CrimePagerActivity()
-                        .newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+                addCrime();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -107,6 +122,13 @@ public class CrimeListFragment extends Fragment{
                 updateSubtitle();
                 return true;
         }
+    }
+    private void addCrime(){
+        Crime crime = new Crime();
+        CrimeLab.get(getActivity()).addCrime(crime);
+        Intent intent = new CrimePagerActivity()
+                .newIntent(getActivity(), crime.getId());
+        startActivity(intent);
     }
 
     private void updateSubtitle(){

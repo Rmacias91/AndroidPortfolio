@@ -1,5 +1,35 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 <android.support.v7.widget.RecyclerView
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/crime_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity = "center">
+        <TextView
+            android:id="@+id/noCrimes_title"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_crimes"/>
+
+        <Button
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/new_crime"
+            android:id="@+id/new_crime"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
+
+</FrameLayout>
