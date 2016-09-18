@@ -2,10 +2,11 @@ package com.example.richie.criminalintent;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.richie.criminalintent.database.CrimeBaseHelper;
-import com.example.richie.criminalintent.database.CrimeDbSchema;
+import com.example.richie.criminalintent.database.CrimeCursorWrapper;
 import com.example.richie.criminalintent.database.CrimeDbSchema.CrimeTable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,36 @@ public class CrimeLab {
     }
 
     public List<Crime> getCrimes(){
-        return new ArrayList<>();
+        List<Crime> crimes = new ArrayList<>();
+        CrimeCursorWrapper cursor = queryCrimes(null,null);
+
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                crimes.add(cursor.getCrime());
+                cursor.moveToNext();
+            }
+        }finally{
+            cursor.close();
+        }
+        return crimes;
     }
 
     public Crime getCrime(UUID id){
-        return null;
+        CrimeCursorWrapper cursor = queryCrimes(
+                CrimeTable.Cols.UUID + " = ?",
+                new String[] {id.toString()}
+        );
+        try {
+            if (cursor.getCount()==0){
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getCrime();
+        } finally {
+            cursor.close();
+        }
+        
     }
     public void updateCrime(Crime crime){
         String uuidString = crime.getId().toString();
@@ -61,6 +87,28 @@ public class CrimeLab {
     public void addCrime(Crime c){
         ContentValues values = getContentValues(c);
         mDatabase.insert(CrimeTable.NAME, null, values);
+    }
+
+    private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                CrimeTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+    return new CrimeCursorWrapper(cursor);
+    }
+
+    public void deleteCrime(UUID crimeId){
+        String uuidString = crimeId.toString();
+        mDatabase.delete(CrimeTable.NAME,
+                CrimeTable.Cols.UUID + " = ?",
+                new String[] {uuidString});
+
     }
 
 }

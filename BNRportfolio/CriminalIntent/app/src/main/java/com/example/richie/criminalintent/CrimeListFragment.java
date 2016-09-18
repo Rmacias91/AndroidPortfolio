@@ -87,8 +87,8 @@ public class CrimeListFragment extends Fragment{
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else{
-            mAdapter.notifyDataSetChanged(); // Had to remove the itemSetChanged() due to
-                                            //PageViewer being able to update multiple items..
+            mAdapter.notifyDataSetChanged();// Had to remove the itemSetChanged() due to
+            mAdapter.setCrimes(crimes);     //PageViewer being able to update multiple items..
                                             //revisit this and maybe use notifyItemRangerChanged!
         }
         updateSubtitle();
@@ -200,7 +200,8 @@ public class CrimeListFragment extends Fragment{
             return mCrimes.size();
         }
 
-
-
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
+        }
     }
 }

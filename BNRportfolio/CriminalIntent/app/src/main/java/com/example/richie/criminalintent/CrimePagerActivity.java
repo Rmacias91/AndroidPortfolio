@@ -75,22 +75,15 @@ public class CrimePagerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.menu_item_delete_crime:
-                deleteCrime();
+                CrimeLab.get(this).deleteCrime(getCrimeId());
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-    private void deleteCrime(){
-        UUID crimeId = getCrimeId();
-        for(int i =0; i<=mCrimes.size();i++){
-            if(mCrimes.get(i).getId().equals(crimeId)){
-                mCrimes.remove(i);
-                break;
-            }
-        }
-    }
+
+
 
     private UUID getCrimeId(){
         return(UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);

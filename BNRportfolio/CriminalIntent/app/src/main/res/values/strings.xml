@@ -11,5 +11,7 @@
     <string name = "hide_subtitle">Hide Subtitle</string>
     <string name = "subtitle_format">">%1$s crimes</string>
     <string name = "no_crimes">No Crimes Available</string>
+    <string name = "crime_suspect_text"> Choose Suspect</string>
+    <string name = "crime_report_text"> Send Crime Report</string>
 
 </resources>
