@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,6 +161,12 @@ public class CrimeListFragment extends Fragment{
                     itemView.findViewById(R.id.list_item_crime_date_text_view);
             mSolvedCheckBox=(CheckBox)
                     itemView.findViewById(R.id.list_item_crime_solved_checkbox);
+            mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                }
+            });
         }
         public void bindCrime(Crime crime){
             mCrime = crime;
