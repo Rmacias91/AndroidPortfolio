@@ -5,6 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
+import android.util.Log;
+
+import java.io.IOException;
 
 /**
  * Created by Richie on 9/21/2016.
@@ -39,10 +43,35 @@ public class PitcureUtils {
         options.inSampleSize = inSampleSize;
 
         Bitmap scaledBitmap= BitmapFactory.decodeFile(path, options);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        ExifInterface ei;
+       try{
+           ei = new ExifInterface(path);
+       }
+       catch(IOException e){
+           Log.d("ExitInterface",  " Exit Interface didn't work" + e);
+           return null;
+       }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
 
-        return Bitmap.createBitmap(scaledBitmap,0,0,scaledBitmap.getWidth(),scaledBitmap .getHeight(), matrix, true);
+        switch(orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+               return rotateImage(scaledBitmap, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(scaledBitmap, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(scaledBitmap, 270);
+            case ExifInterface.ORIENTATION_NORMAL:
+            default: return scaledBitmap;
+        }
+
+
+    }
+    private static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
     }
 
 
