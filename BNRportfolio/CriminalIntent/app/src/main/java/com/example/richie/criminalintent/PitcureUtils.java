@@ -14,13 +14,14 @@ import java.io.IOException;
  * Created by Richie on 9/21/2016.
  */
 public class PitcureUtils {
-
+/*
     public static Bitmap getScaledBitmap(String path, Activity activity){
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay()
                 .getSize(size);
         return getScaledBitmap(path, size.x, size.y);
     }
+    */
 
     public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight){
         BitmapFactory.Options options = new BitmapFactory.Options();

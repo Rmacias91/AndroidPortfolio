@@ -18,12 +18,14 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import java.io.File;
@@ -39,6 +41,7 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID= "crime_id";
     private static final String DIALOG_DATE="DialogDate";
     private static final String DIALOG_TIME="DialogTime";
+    private static final String DIALOG_ZOOMEDIMG = "ZoomedImg";
 
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
@@ -56,6 +59,9 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     private File mPhotoFile;
 
+    private int mThumbHeight;
+    private int mThumbWidth;
+
 
     public static CrimeFragment newInstance(UUID crimeId){
         Bundle args= new Bundle();
@@ -72,6 +78,7 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime= CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+
     }
 
     @Override
@@ -85,6 +92,10 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_crime,container,false);
+
+        final LinearLayout layout = (LinearLayout)v.findViewById(R.id.fragment_crime_layout);
+        ViewTreeObserver vto = layout.getViewTreeObserver();
+
 
         mTitleField= (EditText) v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
@@ -184,6 +195,31 @@ public class CrimeFragment extends Fragment {
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mThumbWidth = mPhotoView.getMeasuredWidth();
+                mThumbHeight = mPhotoView.getMeasuredHeight();
+                updatePhotoView(mThumbHeight, mThumbWidth);
+            }
+        });
+
+
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Set Dialog Fragment
+                if(mPhotoFile !=null){
+                    FragmentManager manager = getFragmentManager();
+                    ImageViewerFragment dialog = ImageViewerFragment
+                            .newInstance(mPhotoFile);
+                   // dialog.setTargetFragment(CrimeFragment.this); //Don't think I need for not having a result back
+                    dialog.show(manager, DIALOG_ZOOMEDIMG); // Just a Tag for the String (Lame)
+                }
+            }
+        });
+
         boolean canTakePhoto = mPhotoFile !=null &&
                 captureImage.resolveActivity(packageManager)!=null;
         mPhotoButton.setEnabled(canTakePhoto);
@@ -199,7 +235,6 @@ public class CrimeFragment extends Fragment {
                 startActivityForResult(captureImage, REQUEST_PHOTO);
             }
         });
-        updatePhotoView();
         return v;
     }
 
@@ -244,7 +279,7 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         }else if(requestCode == REQUEST_PHOTO){
-            updatePhotoView();
+            updatePhotoView(mThumbHeight, mThumbWidth);
         }
 
     }
@@ -283,11 +318,11 @@ public class CrimeFragment extends Fragment {
         return report;
     }
 
-    private void updatePhotoView(){
+    private void updatePhotoView(int height, int width){
         if(mPhotoFile == null || !mPhotoFile.exists()){
             mPhotoView.setImageDrawable(null);
         } else{
-            Bitmap bitmap = PitcureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap = PitcureUtils.getScaledBitmap(mPhotoFile.getPath(), width, height);
             mPhotoView.setImageBitmap(bitmap);
         }
     }
