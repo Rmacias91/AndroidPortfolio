@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -46,9 +47,12 @@ public class ImageViewerFragment extends DialogFragment{
 
         if (mPhotoFile != null) {
 
-            int y = mImageView.getMeasuredHeight();
-            int x = mImageView.getMeasuredWidth();
-            Bitmap bitmap = PitcureUtils.getScaledBitmap(mPhotoFile.getPath(),x,y);
+            //int y = mImageView.getMeasuredHeight();
+            //int x = mImageView.getMeasuredWidth();
+            Point size = new Point();
+            getActivity().getWindowManager().getDefaultDisplay()
+                    .getSize(size);
+            Bitmap bitmap = PitcureUtils.getScaledBitmap(mPhotoFile.getPath(),size.x,size.y);
             mImageView.setImageBitmap(bitmap);
         }
 
