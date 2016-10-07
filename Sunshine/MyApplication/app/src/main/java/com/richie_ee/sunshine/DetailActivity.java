@@ -16,6 +16,7 @@ package com.richie_ee.sunshine;
  * limitations under the License.
  */
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -65,7 +69,6 @@ public class DetailActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
         public PlaceholderFragment() {
         }
 
@@ -74,6 +77,14 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            //Looks like you can just call GetActivity then GetIntent... so no need
+            //to pass the extra from activity as an Argument to the fragment.
+            //I think its better to pass the extra to fragment from activity, so fragment isn't bound/relying on activity.
+            // not really sure, ask android listener.
+
+            Intent intent = getActivity().getIntent();
+            String forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+            ((TextView)rootView.findViewById(R.id.detail_forecast)).setText(forecast);
             return rootView;
         }
     }
