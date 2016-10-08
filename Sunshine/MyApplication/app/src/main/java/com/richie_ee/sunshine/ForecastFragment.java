@@ -1,10 +1,13 @@
 package com.richie_ee.sunshine;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -52,15 +55,22 @@ public class ForecastFragment extends Fragment {
         inflater.inflate(R.menu.forecastfragment, menu);
 
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_refresh){
-            FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
-            fetchWeatherTask.execute("60613");
+            updateWeather();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -68,16 +78,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_main, container, false);
-        String[] fakeForecastArray = {"Today - Cloudy - 67/55",
-                "Tomorrow - Sunny 77/67",
-                "Sunday - Sunny 67/34",
-                "Monday - Cold AF - 33/12",
-                "Tuesday - Hot as balls 99/12",
-                "Wednesday - Sunny - 66/65",
-                "Thursday - Rainy - 55/34"
-        };
-        List<String> mForecastList = new ArrayList<>(
-                Arrays.asList(fakeForecastArray));
+        List<String> mForecastList = new ArrayList<>();
 
         mForecastAdapter = new ArrayAdapter<>(getActivity(),R.layout.list_item_layout,R.id.list_item_forecast_textview,mForecastList);
         mListView = (ListView)v.findViewById(R.id.listview_forecast);
@@ -93,6 +94,12 @@ public class ForecastFragment extends Fragment {
         });
 
         return v;
+    }
+    private void updateWeather(){
+        FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        fetchWeatherTask.execute(location);
     }
 
     public class FetchWeatherTask extends AsyncTask<String,Void,String[]>{
@@ -113,6 +120,19 @@ public class ForecastFragment extends Fragment {
          * Prepare the weather high/lows for presentation.
          */
         private String formatHighLows(double high, double low) {
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String units = sharedPref.getString(getString(R.string.pref_units_key),getString(R.string.pref_unit_metric));
+            if(units.equals(getString(R.string.pref_unit_imperial))){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8)+32;
+            }
+            else if(!units.equals(getString(R.string.pref_unit_metric))){
+                Log.d(LOG_TAG,"Unit type "+ units +" does not exist");
+            }
+
+
+
             // For presentation, assume the user doesn't care about tenths of a degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
@@ -187,6 +207,7 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
+
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
@@ -198,9 +219,9 @@ public class ForecastFragment extends Fragment {
 
 
         @Override
-        protected String[] doInBackground(String... postCode){
-
-            if(postCode.length==0){
+        protected String[] doInBackground(String... inputs){
+            //Input 0 = location, input 1= units
+            if(inputs.length==0){
                 return null;
             }
             // These two need to be declared outside the try/catch
@@ -227,7 +248,7 @@ public class ForecastFragment extends Fragment {
                 final String APPID_PARAM = "APPID";
 
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                        .appendQueryParameter(QUERY_PARAM, postCode[0])
+                        .appendQueryParameter(QUERY_PARAM, inputs[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .appendQueryParameter(UNITS_PARAM, units)
                         .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
@@ -263,6 +284,7 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
