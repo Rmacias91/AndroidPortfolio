@@ -19,7 +19,7 @@ android {
     }
 //HOLY CRAP DON;t FORGET TO USE '"KEY"' YOU NEED THE FREAKING ' ' sweet jesus
     buildTypes.each {
-        it.buildConfigField 'String','OPEN_WEATHER_MAP_API_KEY','"98adaec88275ac5e03a288efaee18a11"'
+        it.buildConfigField 'String','OPEN_WEATHER_MAP_API_KEY',''
     }
 }
 dependencies {
