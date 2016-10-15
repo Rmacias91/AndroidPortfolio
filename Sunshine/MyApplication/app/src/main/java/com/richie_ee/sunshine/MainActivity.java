@@ -1,7 +1,10 @@
 package com.richie_ee.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -50,7 +53,26 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if(id== R.id.action_map){
+           showOnMap();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void showOnMap(){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String location = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", location)
+                .build();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+
+        mapIntent.setData(geoLocation);
+        // intent.setData();
+        if (mapIntent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+
     }
 }

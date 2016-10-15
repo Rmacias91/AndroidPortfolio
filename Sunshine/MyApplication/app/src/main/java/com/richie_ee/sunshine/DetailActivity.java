@@ -17,19 +17,26 @@ package com.richie_ee.sunshine;
  */
 
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
 public class DetailActivity extends ActionBarActivity {
+
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +78,12 @@ public class DetailActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+        private String mForecast;
+        private String hashTag = "#SunShineApp";
+        private static final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
+
         public PlaceholderFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -85,9 +97,34 @@ public class DetailActivity extends ActionBarActivity {
             // not really sure, ask android listener.
 
             Intent intent = getActivity().getIntent();
-            String forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
-            ((TextView)rootView.findViewById(R.id.detail_forecast)).setText(forecast);
+            mForecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+            ((TextView)rootView.findViewById(R.id.detail_forecast)).setText(mForecast);
+
             return rootView;
+        }
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+            inflater.inflate(R.menu.detail_fragment,menu);
+
+            MenuItem menuItem = menu.findItem(R.id.menu_share);
+
+            ShareActionProvider mShareActionProvider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+            if(mShareActionProvider != null){
+                mShareActionProvider.setShareIntent(createShareForecastIntent());
+            }else{
+                Log.d(LOG_TAG,"Share Action Provider is null?");
+            }
+        }
+
+        private Intent createShareForecastIntent(){
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT,
+                    mForecast + hashTag);
+            return shareIntent;
         }
     }
 }
