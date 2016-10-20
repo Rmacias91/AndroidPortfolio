@@ -13,7 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.squareup.picasso.Picasso;
 
 public class MainMovieActivity extends AppCompatActivity {
 
@@ -35,11 +38,11 @@ public class MainMovieActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
             String[] data = new String[]{"Richie","Rocks","So Much","Its Impossirburee","Richie","Rocks","So Much","Its Impossirburee",
-                    "Richie","Rocks","So Much","Its Impossirburee",
-                    "Richie","Rocks","So Much","Its Impossirburee",
                     "Richie","Rocks","So Much","Its Impossirburee",};
 
             View v = inflater.inflate(R.layout.fragment_main_movie, container, false);
+
+
 
             RecyclerView rvData = (RecyclerView) v.findViewById(R.id.rvData);
 

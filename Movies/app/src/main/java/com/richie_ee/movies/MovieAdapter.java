@@ -1,14 +1,15 @@
 package com.richie_ee.movies;
 
 import android.content.Context;
-import android.graphics.Movie;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 
 /**
  * Created by Richie on 10/17/2016.
@@ -55,6 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         TextView textView = viewHolder.mTextView;
         textView.setText(dummData);
         ImageView imageView = viewHolder.mImageView;
+        Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
     }
 
     @Override
@@ -77,6 +79,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
             mTextView = (TextView) itemView.findViewById(R.id.textView);
             mImageView = (ImageView) itemView.findViewById(R.id.image);
+
         }
     }
 }
