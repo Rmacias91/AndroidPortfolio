@@ -18,6 +18,8 @@ import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class MainMovieActivity extends AppCompatActivity {
 
     @Override
@@ -32,29 +34,6 @@ public class MainMovieActivity extends AppCompatActivity {
 
     }
 
-    static public class MainMovieFragment extends Fragment{
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
-            String[] data = new String[]{"Richie","Rocks","So Much","Its Impossirburee","Richie","Rocks","So Much","Its Impossirburee",
-                    "Richie","Rocks","So Much","Its Impossirburee",};
-
-            View v = inflater.inflate(R.layout.fragment_main_movie, container, false);
-
-
-
-            RecyclerView rvData = (RecyclerView) v.findViewById(R.id.rvData);
-
-            MovieAdapter adapter = new MovieAdapter(getContext(), data);
-
-            rvData.setAdapter(adapter);
-            GridLayoutManager gridLayoutManager =
-                    new GridLayoutManager(getContext(),2);
-            rvData.setLayoutManager(gridLayoutManager);
-            return v;
-        }
-    }
 
 }
 
