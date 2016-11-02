@@ -4,20 +4,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="16dp">
+              >
 
-
-    <TextView
-        android:id="@+id/textView"
-        android:gravity="center"
-        tools:hint="Testttt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/row_image"
+        android:layout_width="match_parent"
+        android:layout_height="271dp"
+        android:background="@color/black"/>
 
 
 

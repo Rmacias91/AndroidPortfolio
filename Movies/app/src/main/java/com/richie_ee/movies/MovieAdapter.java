@@ -1,32 +1,35 @@
 package com.richie_ee.movies;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by Richie on 10/17/2016.
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
-
-
-
-
+    private final String LOG_TAG = MovieAdapter.class.getSimpleName();
 
     private Context mContext;
-    private String[] data;
+    private List<Movie> movies;
 
-    public MovieAdapter(Context mContext, String[] data){
+    public MovieAdapter(Context mContext, List<Movie> movies){
 
         this.mContext = mContext;
-        this.data = data;
+        this.movies=new ArrayList<>();
+        this.movies = movies;
 
     }
 
@@ -48,20 +51,27 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(MovieAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(MovieAdapter.ViewHolder viewHolder, final int position) {
         // Get the data model based on position
-        String dummData = data[position];
-
+        Movie movie = movies.get(position);
+        String posterPath = movie.getPosterPath();
+        String title = movie.getTitle();
         // Set item views based on your views and data model
-        TextView textView = viewHolder.mTextView;
-        textView.setText(dummData);
+
+
         ImageView imageView = viewHolder.mImageView;
-        Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+        Picasso.with(mContext).load(posterPath).into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),DetailMovieActivity.class);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return movies.size();
     }
 
 
@@ -69,7 +79,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTextView;
         public ImageView mImageView;
 
         public ViewHolder(View itemView) {
@@ -77,8 +86,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            mTextView = (TextView) itemView.findViewById(R.id.textView);
-            mImageView = (ImageView) itemView.findViewById(R.id.image);
+            mImageView = (ImageView) itemView.findViewById(R.id.row_image);
 
         }
     }

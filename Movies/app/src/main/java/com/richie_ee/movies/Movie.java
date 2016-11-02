@@ -1,9 +1,12 @@
 package com.richie_ee.movies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Richie on 10/20/2016.
  */
-public class Movie {
+public class Movie implements Parcelable{
 
     private String posterPath;
     private String title;
@@ -11,12 +14,12 @@ public class Movie {
     private String rating;
     private String releaseDate;
 
-    public Movie(String[] movieInfo){
-        this.posterPath=movieInfo[0];
-        this.title= movieInfo[1];
-        this.plot = movieInfo[2];
-        this.rating= movieInfo[3];
-        this.releaseDate = movieInfo[4];
+    public Movie(String posterPath, String title, String plot, String rating, String releaseDate){
+        this.posterPath= posterPath;
+        this.title= title;
+        this.plot = plot;
+        this.rating= rating;
+        this.releaseDate = releaseDate;
     }
 
     public String getPosterPath(){
@@ -38,5 +41,38 @@ public class Movie {
     public String getReleaseDate() {
         return releaseDate;
     }
+
+    //Parcelable
+    @Override
+    public void writeToParcel(Parcel out, int flags){
+
+    }
+
+    private Movie(Parcel in){
+
+    }
+
+    @Override
+    public int describeContents(){
+        return 0;
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR
+            = new Parcelable.Creator<Movie>(){
+
+        @Override
+        public Movie createFromParcel(Parcel in){
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size){
+            return new Movie[size];
+        }
+    };
+
+
+
+
 
 }
