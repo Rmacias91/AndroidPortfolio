@@ -55,7 +55,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         // Get the data model based on position
         Movie movie = movies.get(position);
         String posterPath = movie.getPosterPath();
-        String title = movie.getTitle();
         // Set item views based on your views and data model
 
 
@@ -65,6 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(),DetailMovieActivity.class);
+                intent.putExtra("movie",movies.get(position));
             }
         });
     }

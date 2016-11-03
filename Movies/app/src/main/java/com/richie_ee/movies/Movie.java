@@ -42,15 +42,29 @@ public class Movie implements Parcelable{
         return releaseDate;
     }
 
-    //Parcelable
-    @Override
-    public void writeToParcel(Parcel out, int flags){
+    //*******************Parcelable**********************************************//
 
-    }
 
     private Movie(Parcel in){
+        String[]data = new String[5];
+
+        in.readStringArray(data);
+        this.posterPath = data[0];
+        this.title = data[1];
+        this.plot = data[2];
+        this.rating = data[3];
+        this.releaseDate = data[4];
 
     }
+    @Override
+    public void writeToParcel(Parcel out, int flags){
+        out.writeStringArray(new String[]{
+            this.posterPath,
+            this.title,
+            this.plot,
+            this.rating,
+            this.releaseDate});
+        }
 
     @Override
     public int describeContents(){

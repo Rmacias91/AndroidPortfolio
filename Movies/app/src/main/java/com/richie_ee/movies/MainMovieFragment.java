@@ -48,15 +48,13 @@ public class MainMovieFragment extends Fragment {
         RecyclerView rvData = (RecyclerView) v.findViewById(R.id.rvData);
         mMovies = new ArrayList<>();
         //Pass movie datalist into adapter
-        updateMovies();
+        //updateMovies();
         Log.v(LOG_TAG, "MoviesList size is: "+ mMovies.size());
         mAdapter = new MovieAdapter(getContext(), mMovies);
         rvData.setAdapter(mAdapter);
         GridLayoutManager gridLayoutManager =
                 new GridLayoutManager(getContext(),2);
         rvData.setLayoutManager(gridLayoutManager);
-
-
         return v;
     }
 
