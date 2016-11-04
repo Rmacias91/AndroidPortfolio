@@ -87,7 +87,7 @@ public class MainMovieFragment extends Fragment {
                 String title= jObj.getString("original_title");
                 String plot= jObj.getString("overview");
                 String rating= jObj.getString("vote_average");
-                String release_date= jObj.getString("title");
+                String release_date= jObj.getString("release_date");
                 movies.add(new Movie(poster_image,title,plot,rating,release_date));
             }
         return movies;
