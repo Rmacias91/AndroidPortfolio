@@ -39,8 +39,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     @Override
     public MovieAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        //Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.row_custom_item, parent, false);
@@ -65,6 +65,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(),DetailMovieActivity.class);
                 intent.putExtra("movie",movies.get(position));
+                mContext.startActivity(intent);
             }
         });
     }
