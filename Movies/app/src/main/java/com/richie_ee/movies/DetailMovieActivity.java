@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * Created by Richie on 10/30/2016.
@@ -47,8 +48,9 @@ public class DetailMovieActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.movie_detail, container, false);
 
             Bundle data = getActivity().getIntent().getExtras();
-            Movie movie = (Movie) data.getParcelable("student");
-
+            Movie movie = (Movie) data.getParcelable("movie");
+            TextView TitleView = (TextView) rootView.findViewById(R.id.detail_title);
+            TitleView.setText(movie.getTitle());
 
             return rootView;
         }
