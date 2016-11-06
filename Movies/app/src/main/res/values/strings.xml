@@ -1,3 +1,8 @@
 <resources>
+
     <string name="app_name">Movies</string>
+    <string name="action_settings">Settings</string>
+    <string name="pref_sort_label">Sort By</string>
+    <string name="pref_sort_key">sort</string>
+    <string name="pref_sort">popularity.desc</string>
 </resources>

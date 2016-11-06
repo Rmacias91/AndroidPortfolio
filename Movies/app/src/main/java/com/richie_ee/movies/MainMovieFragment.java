@@ -78,17 +78,22 @@ public class MainMovieFragment extends Fragment {
             //Go Through whole list and store into Movie List Object;
             for(int i =0; i <resultsArray.length(); i++){
                 JSONObject jObj = resultsArray.getJSONObject(i);
-                String poster_path = jObj.getString("poster_path");
-                String BASE_URL ="http://image.tmdb.org/t/p/";
-                String size = "w185";
-                String poster_image= BASE_URL+size+poster_path;
-
-
                 String title= jObj.getString("original_title");
                 String plot= jObj.getString("overview");
                 String rating= jObj.getString("vote_average");
                 String release_date= jObj.getString("release_date");
-                movies.add(new Movie(poster_image,title,plot,rating,release_date));
+                String poster_path = jObj.getString("poster_path");
+                String BASE_URL ="http://image.tmdb.org/t/p/";
+                String size = "w185";
+                if(poster_path!="null") {
+                    String poster_image = BASE_URL + size + poster_path;
+                    movies.add(new Movie(poster_image,title,plot,rating,release_date));
+                }else{
+                    String poster_image = "http://www.classicposters.com/images/nopicture.gif";
+                    movies.add(new Movie(poster_image,title,plot,rating,release_date));
+                }
+
+
             }
         return movies;
         }
@@ -107,16 +112,32 @@ public class MainMovieFragment extends Fragment {
             //I might sort current list by Rating or.. Just store two lists
             //and Swap either or out with adaper.
             String moviesJsonString;
-            String sortBy = "popular";
-            //Later will be Strings[0]
+       //     String sortBy = strings[0];//strings[0] contains popularity or rating
+            String language = "en-US";
+            String adult = "false";
+            String video = "false";
+            String page= "1";
+
+            //https://api.themoviedb.org/3/discover/movie?api_key=&language=en-US
+            // &sort_by=popularity.desc&include_adult=false&include_video=false&page=1
+
             try {
-                final String MOVIE_BASE_URL =
-                        "http://api.themoviedb.org/3/movie/" + sortBy + "?";
-                final String APPID_PARAM = "api_key";
+                final String MOVIE_BASE_URL= "https://api.themoviedb.org/3/discover/movie?";
+                final String APPID_PARAM="api_key";
+                final String LANGUAGE_PARAM="language";
+                final String SORT_PARAM="sort_by";
+                final String ADULT_PARAM="include_adult";
+                final String VIDEO_PARAM="include_video";
+                final String PAGE_PARAM="page";
                 //TODO Call multiple pages with the page? Parameter and store into list
                 //Build the URI from the URL and API KEY
                 Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendQueryParameter(APPID_PARAM, BuildConfig.MOVIE_API_KEY)
+                        .appendQueryParameter(LANGUAGE_PARAM,language)
+                        .appendQueryParameter(SORT_PARAM,"vote_average.desc")//testing firstpopularity.desc
+                        .appendQueryParameter(ADULT_PARAM,adult)
+                        .appendQueryParameter(VIDEO_PARAM,video)
+                        .appendQueryParameter(PAGE_PARAM,page)
                         .build();
 
                 //Open the connection

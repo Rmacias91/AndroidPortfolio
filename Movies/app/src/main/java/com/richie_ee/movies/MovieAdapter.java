@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
         ImageView imageView = viewHolder.mImageView;
         Picasso.with(mContext).load(posterPath).into(imageView);
+
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
