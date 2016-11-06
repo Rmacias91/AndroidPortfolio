@@ -1,8 +1,10 @@
 package com.richie_ee.movies;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,7 +115,9 @@ public class MainMovieFragment extends Fragment {
             //I might sort current list by Rating or.. Just store two lists
             //and Swap either or out with adaper.
             String moviesJsonString;
-       //     String sortBy = strings[0];//strings[0] contains popularity or rating
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String sortBy = sharedPref.getString(getString(R.string.pref_sort_key),getString(R.string.pref_sort));
             String language = "en-US";
             String adult = "false";
             String video = "false";
@@ -134,7 +139,7 @@ public class MainMovieFragment extends Fragment {
                 Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendQueryParameter(APPID_PARAM, BuildConfig.MOVIE_API_KEY)
                         .appendQueryParameter(LANGUAGE_PARAM,language)
-                        .appendQueryParameter(SORT_PARAM,"vote_average.desc")//testing firstpopularity.desc
+                        .appendQueryParameter(SORT_PARAM,sortBy)
                         .appendQueryParameter(ADULT_PARAM,adult)
                         .appendQueryParameter(VIDEO_PARAM,video)
                         .appendQueryParameter(PAGE_PARAM,page)
@@ -195,10 +200,13 @@ public class MainMovieFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> movies) {
             super.onPostExecute(movies);
+            if(movies==null){
+                Toast.makeText(getContext(),"Not Connected to the Internet",Toast.LENGTH_SHORT).show();
+                return;
+            }
             mMovies.clear();
             mMovies.addAll(movies);
             mAdapter.notifyDataSetChanged();
-            Log.v(LOG_TAG,"mMovies after Async is size: "+ mMovies.size());
 
         }
     }
